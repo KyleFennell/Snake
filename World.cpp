@@ -1,6 +1,7 @@
 #include "World.h"
 #include "TextureManager.h"
 
+
 World::World(int w, int h){
     _width = w;
     _height = h;
@@ -14,6 +15,7 @@ World::World(int w, int h){
 
     t_ground = TextureHandler::loadTexture("assets/ground.png");
     t_snake = TextureHandler::loadTexture("assets/snake.png");
+    t_food = TextureHandler::loadTexture("assets/food.png");
     snake = new Snake(_width/2, _height/2);
 }
 
@@ -28,11 +30,8 @@ void World::update(){
 
     _world = _map;          //clear the world back to default state
                             // add food
-    if (snake->head().x() == 0 || snake->head().x() == _width
-        || snake->head().y() == 0 || snake->head().y() == _height){
-
-        }
-    snake->update();        // move snake
+    snake->update(_width, _height);        // move snake taking in width and height for edge checking and warping
+    std::cout << "updated" << std::endl;
     if (_world[snake->head().y()][snake->head().x()] != 0){  // if snake ate something
         // deal with it
     }

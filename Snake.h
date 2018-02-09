@@ -10,7 +10,7 @@ public:
     Snake(int x, int y);
     ~Snake();
 
-    void update();
+    void update(int worldW, int worldH);
     std::vector<Point> snake(){ return _snake; }
     void add(Point p);
     void remove();

@@ -3,6 +3,7 @@
 #include <vector>
 #include "SDL.h"
 #include "Snake.h"
+#include "WorldEntity.h"
 
 class Snake;
 
@@ -14,6 +15,7 @@ public:
     std::vector<std::vector<int>>* world() { return &_world; }
     void update();
     void draw();
+
 private:
 
     int _width;
@@ -22,7 +24,10 @@ private:
     std::vector<std::vector<int>> _world;
 
     Snake* snake;
+    WorldEntity* _food;
 
     SDL_Texture* t_snake;
     SDL_Texture* t_ground;
+    SDL_Texture* t_food;
+
 };
