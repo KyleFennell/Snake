@@ -19,6 +19,9 @@ public:
         p1._y += p2.y();
         return p1;
     }
+    bool operator==(const Point& p){
+        return (this->_x == p.x() && this->_y == p.y());
+    }
 
 
 private:
