@@ -1,15 +1,17 @@
 #pragma once
 
 #include "SDL.h"
+#include "InputHandler.h"
+#include "World.h"
 #include <iostream>
 
+class World;
 
 class Game{
 public:
 
     static SDL_Renderer* renderer;
-    static SDL_Event* event;
-
+    static SDL_Event event;
     Game();
     ~Game();
 
@@ -25,6 +27,9 @@ public:
 private:
     SDL_Window* window;
 
+    World* _world;
+
     bool _running = false;
     bool _paused = false;
+
 };

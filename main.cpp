@@ -4,26 +4,25 @@
 int main(int argc, char* argv[]){
 
     Game g;
-    g.init(title, x, y, w, h, fs);
-    const int FPS = 60;
+    g.init("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
+    const int FPS = 10;
     const int frameDelay = 1000 / FPS;
     Uint32 frameStart;
     int frameTime;
 
-    while(g.isRunning()){
+    while(g.running()){
         frameStart = SDL_GetTicks();
 
-        if (SDL_PollEvent(&g::event) == 1){
-            g.handleEvents();
-        }
+        while (SDL_PollEvent(&Game::event) == 1){}
 
+        g.handleEvents();
         g.update();
-        g.draw();
+        g.render();
 
         frameTime = SDL_GetTicks()-frameStart;
 
-        if (activeDelay > frameTime){
-            SDL_Delay(activeDelay-frameTime);
+        if (frameDelay > frameTime){
+            SDL_Delay(frameDelay-frameTime);
         }
     }
     g.clean();

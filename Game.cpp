@@ -1,6 +1,10 @@
 #include "Game.h"
 
 SDL_Renderer* Game::renderer = nullptr;
+SDL_Event Game::event;
+
+Game::Game(){}
+Game::~Game(){}
 
 void Game::init(const char* title, int x, int y, int width, int height, bool fullscreen){
     Uint32 flags = 0;
@@ -23,21 +27,24 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
         std::cout << "SDL Initialisation Failed..." << std::endl;
         _running = false;
     }
+
+    _world = new World(50, 40);
 }
 
 void Game::handleEvents(){
     if (event.type == SDL_QUIT) {
-        running = false;
+        _running = false;
     }
+    InputHandler::handleEvents();
 }
 
 void Game::update(){
-
+    _world->update();
 }
 
 void Game::render(){
     SDL_RenderClear(renderer);
-    //draw sruff
+    _world->draw();
     SDL_RenderPresent(renderer);
 }
 
