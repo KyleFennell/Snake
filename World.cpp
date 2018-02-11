@@ -1,7 +1,6 @@
 #include "World.h"
 #include "TextureManager.h"
 
-
 World::World(int w, int h){
     _width = w;
     _height = h;
@@ -34,21 +33,18 @@ void World::update(){
         addEntity(2);
         _foodCount++;
     }
-    std::cout << "snake size: " << _snake->snake().size() << std::endl;
     for (Point p : _snake->snake()){
-        std::cout << "bing" << p.x() << "," << p.y() << " " << _snake->head().x() << "," << _snake->head().y() << (p != _snake->head()) << std::endl;
         if (p != _snake->head()){
-            std::cout << "bong" << std::endl;
             _world[p.y()][p.x()] = -1;
         }
-    }                       // add snake to the map
-    std::cout << "snake body placed" << std::endl;
+    }                       // add snake to the map for collision checking
+
     for(int i = 0; i < (int)_entities.size(); i++){             // populate the world with entities
         _world[_entities[i]->pos().y()][_entities[i]->pos().x()] = _entities[i]->type();
     }
-    std::cout << "entities placed" << std::endl;
-    if (_snake->update(_width, _height)){                            // move snake taking in width and height for edge checking and warping
-        if (_world[_snake->head().y()][_snake->head().x()] != 0){   // if snake ate something
+
+    if (_snake->update(_width, _height)){                                // move snake taking in width and height for edge checking and warping
+        if (_world[_snake->head().y()][_snake->head().x()] != 0){        // if snake ate something
             if (_world[_snake->head().y()][_snake->head().x()] == -1){   // if it are snake
                 reset();
             }
@@ -60,17 +56,14 @@ void World::update(){
                 }
             }
         }
-        else {                  // snake didnt eat anything;
+        else {                   // snake didnt eat anything;
             _snake->remove();    // snake stays same length
         }
-        std::cout << "collision handled" << std::endl;
     }
 
     for (Point p : _snake->snake()){
-        std::cout << p.x() << "," << p.y() << std::endl;
         _world[p.y()][p.x()] = 1;
     }                       // add snake to the map
-    std::cout << "snake drawn" << std::endl;
 }
 
 void World::addEntity(int type){

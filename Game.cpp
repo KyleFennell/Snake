@@ -27,7 +27,6 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
         std::cout << "SDL Initialisation Failed..." << std::endl;
         _running = false;
     }
-
     _world = new World(50, 40);
 }
 

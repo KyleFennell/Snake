@@ -3,7 +3,7 @@
 #include <vector>
 #include "SDL.h"
 #include "Snake.h"
-#include "WorldEntity.h"
+#include "WorldEntity.h"
 
 class Snake;
 
@@ -13,6 +13,8 @@ public:
     World(int w, int h);
     ~World();
     std::vector<std::vector<int>>* world() { return &_world; }
+
+    void loadLevel();
 
     void update();
     void draw();
