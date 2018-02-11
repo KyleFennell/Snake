@@ -5,28 +5,32 @@ Snake::Snake(int x, int y){
 }
 
 Snake::~Snake(){
-    for (int i = 0; i < (int)_snake.size(); i++){
-        delete &_snake[i];
-    }
     delete &_snake;
 }
 
-void Snake::update(int worldW, int worldH){
-    switch (InputHandler::key()){
-    case 'w':
-        add(head()+((head().y() != 0)?Point(0, -1):Point(0, worldH-1)));
-        break;
-    case 'a':
-        add(head()+((head().x() != 0)?Point(-1, 0):Point(worldW-1, 0)));
-        break;
-    case 's':
-        add(head()+((head().y() != worldH-1)?Point(0, 1):Point(0, -worldH+1)));
-        break;
-    case 'd':
-        add(head()+((head().x() != worldW-1)?Point(1, 0):Point(-worldW+1, 0)));
-        break;
+bool Snake::update(int worldW, int worldH){
+    if (_counter < _speed){
+        _counter++;
+        return false;
     }
-    std::cout << "head: " << head().x() << "," << head().y() << std::endl;
+    else {
+        _counter = 0;
+        switch (InputHandler::key()){
+        case 'w':
+            add(head()+((head().y() != 0)?Point(0, -1):Point(0, worldH-1)));
+            break;
+        case 'a':
+            add(head()+((head().x() != 0)?Point(-1, 0):Point(worldW-1, 0)));
+            break;
+        case 's':
+            add(head()+((head().y() != worldH-1)?Point(0, 1):Point(0, -worldH+1)));
+            break;
+        case 'd':
+            add(head()+((head().x() != worldW-1)?Point(1, 0):Point(-worldW+1, 0)));
+            break;
+        }
+    }
+    return true;
 }
 
 void Snake::add(Point p){

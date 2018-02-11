@@ -4,6 +4,11 @@ char InputHandler::_key = 's';
 
 void InputHandler::handleEvents(){
     switch(Game::event.key.keysym.sym){
+    case SDLK_ESCAPE:
+        SDL_Event quit;
+        quit.type = SDL_QUIT;
+        SDL_PushEvent(&quit);
+        break;
     case SDLK_w:
         _key = 'w';
         break;
@@ -15,6 +20,8 @@ void InputHandler::handleEvents(){
         break;
     case SDLK_d:
         _key = 'd';
+        break;
+    default:
         break;
     }
 }

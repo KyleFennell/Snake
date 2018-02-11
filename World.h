@@ -37,6 +37,6 @@ private:
     SDL_Texture* t_food;
 
     int _foodCount = 0;
-    int _foodMax = 5;
+    int _foodMax = 10;
 
 };

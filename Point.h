@@ -23,6 +23,10 @@ public:
         return (this->_x == p.x() && this->_y == p.y());
     }
 
+    bool operator!=(const Point& p){
+        return !(*this == p);
+    }
+
 
 private:
 

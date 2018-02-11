@@ -5,7 +5,7 @@ int main(int argc, char* argv[]){
 
     Game g;
     g.init("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
-    const int FPS = 10;
+    const int FPS = 60;
     const int frameDelay = 1000 / FPS;
     Uint32 frameStart;
     int frameTime;

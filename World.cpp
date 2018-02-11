@@ -32,34 +32,45 @@ void World::update(){
 
     while (_foodCount < _foodMax){                             // add food
         addEntity(2);
+        _foodCount++;
     }
-
+    std::cout << "snake size: " << _snake->snake().size() << std::endl;
     for (Point p : _snake->snake()){
-        _world[p.y()][p.x()] = -1;
+        std::cout << "bing" << p.x() << "," << p.y() << " " << _snake->head().x() << "," << _snake->head().y() << (p != _snake->head()) << std::endl;
+        if (p != _snake->head()){
+            std::cout << "bong" << std::endl;
+            _world[p.y()][p.x()] = -1;
+        }
     }                       // add snake to the map
-
+    std::cout << "snake body placed" << std::endl;
     for(int i = 0; i < (int)_entities.size(); i++){             // populate the world with entities
         _world[_entities[i]->pos().y()][_entities[i]->pos().x()] = _entities[i]->type();
     }
-
-    _snake->update(_width, _height);                            // move snake taking in width and height for edge checking and warping
-    std::cout << "updated" << std::endl;
-    if (_world[_snake->head().y()][_snake->head().x()] != 0){   // if snake ate something
-        if (_world[_snake->head().y()][_snake->head().x()] == -1){   // if it are snake
-            reset();
+    std::cout << "entities placed" << std::endl;
+    if (_snake->update(_width, _height)){                            // move snake taking in width and height for edge checking and warping
+        if (_world[_snake->head().y()][_snake->head().x()] != 0){   // if snake ate something
+            if (_world[_snake->head().y()][_snake->head().x()] == -1){   // if it are snake
+                reset();
+            }
+            else if (_world[_snake->head().y()][_snake->head().x()] == 2){   // if it are food
+                removeEntity(_snake->head().x(), _snake->head().y());
+                _foodCount--;
+                if (_snake->snake().size()%3 == 0){
+                    _snake->speed() /= 2;
+                }
+            }
         }
-        if (_world[_snake->head().y()][_snake->head().x()] == 2){   // if it are food
-            removeEntity(_snake->head().x(), _snake->head().y());
-            _foodCount--;
+        else {                  // snake didnt eat anything;
+            _snake->remove();    // snake stays same length
         }
-    }
-    else {                  // snake didnt eat anything;
-        _snake->remove();    // snake stays same length
+        std::cout << "collision handled" << std::endl;
     }
 
     for (Point p : _snake->snake()){
+        std::cout << p.x() << "," << p.y() << std::endl;
         _world[p.y()][p.x()] = 1;
     }                       // add snake to the map
+    std::cout << "snake drawn" << std::endl;
 }
 
 void World::addEntity(int type){
@@ -69,15 +80,13 @@ void World::addEntity(int type){
         int y = rand()%_height;
         if (_world[y][x] == 0){
             _entities.push_back(new WorldEntity(Point(x, y), type));
-            _foodCount++;
             placed = true;
-            std::cout << "food added: " << x << "," << y << std::endl;
         }
     }
 }
 
 void World::removeEntity(int x, int y){
-    for (int i = 0; i < _entities.size(); i++){
+    for (int i = 0; i < (int)_entities.size(); i++){
         if (_entities[i]->pos() == Point(x,y)){
             _entities.erase(_entities.begin()+i);
         }
@@ -85,14 +94,9 @@ void World::removeEntity(int x, int y){
 }
 
 void World::reset(){
-    delete _snake;
     _snake = new Snake(_width/2, _height/2);
-    for (int i = 0; i < (int)_entities.size(); i++){
-        _entities.pop_back();
-    }
+    _entities.clear();
     _foodCount = 0;
-
-
 }
 
 void World::draw(){
