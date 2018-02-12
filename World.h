@@ -3,7 +3,7 @@
 #include <vector>
 #include "SDL.h"
 #include "Snake.h"
-#include "WorldEntity.h"
+#include "WorldEntity.h"#include "MapManager.h"
 
 class Snake;
 
@@ -14,7 +14,6 @@ public:
     ~World();
     std::vector<std::vector<int>>* world() { return &_world; }
 
-    void loadLevel();
 
     void update();
     void draw();
@@ -24,19 +23,24 @@ private:
     void addEntity(int type);
     void removeEntity(int x, int y);
 
+    void loadMap();
     void reset();
 
     int _width;
     int _height;
+    int _level = 0;
     std::vector<std::vector<int>> _map;
     std::vector<std::vector<int>> _world;
 
     Snake* _snake;
     std::vector<WorldEntity*> _entities;
+    MapManager* _maps;
 
     SDL_Texture* t_snake;
     SDL_Texture* t_ground;
     SDL_Texture* t_food;
+    SDL_Texture* t_goal;
+    SDL_Texture* t_wall;
 
     int _foodCount = 0;
     int _foodMax = 10;
