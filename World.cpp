@@ -19,7 +19,8 @@ World::World(int w, int h){
     t_food = TextureHandler::loadTexture("assets/food.png");
     t_wall = TextureHandler::loadTexture("assets/wall.png");
     t_goal = TextureHandler::loadTexture("assets/goal.png");
-    _snake = new Snake(_width/2, _height/2);
+    _snake = new Snake(_width/2, _height/2, 2, 1, 50);
+
 }
 
 World::~World(){
@@ -48,6 +49,7 @@ void World::update(){
     }
 
     if (_snake->update(_width, _height)){                                // move snake taking in width and height for edge checking and warping
+        _snake->decelerate();
         if (_world[_snake->head().y()][_snake->head().x()] != 0){        // if snake ate something
             if (_world[_snake->head().y()][_snake->head().x()] == -1 ||
                   _world[_snake->head().y()][_snake->head().x()] == 3){   // if it ate snake or wall
@@ -56,10 +58,8 @@ void World::update(){
             else if (_world[_snake->head().y()][_snake->head().x()] == 2){   // if it are food
                 removeEntity(_snake->head().x(), _snake->head().y());
                 _foodCount--;
-                if (_snake->snake().size()%3 == 0){
-                    _snake->speed()--;
-                }
-                if (_snake->snake().size() == 5){
+                _snake->accelerate();
+                if (_snake->snake().size() == 10){
                     addEntity(4);
                 }
             }
@@ -103,7 +103,7 @@ void World::removeEntity(int x, int y){
 }
 
 void World::reset(){
-    _snake = new Snake(_width/2, _height/2);
+    _snake->reset();
     _entities.clear();
     _foodCount = 0;
 }
