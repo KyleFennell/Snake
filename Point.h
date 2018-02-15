@@ -27,6 +27,10 @@ public:
         return !(*this == p);
     }
 
+    bool operator<(const Point p) const{
+        return this->x()*100+this->y() < p.x()*100+p.y();
+    }
+
 
 private:
 

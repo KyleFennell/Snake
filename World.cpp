@@ -1,5 +1,6 @@
 #include "World.h"
 #include "TextureManager.h"
+#include "EntityFactory.h"
 
 World::World(int w, int h){
     _width = w;
@@ -19,7 +20,7 @@ World::World(int w, int h){
     t_food = TextureHandler::loadTexture("assets/food.png");
     t_wall = TextureHandler::loadTexture("assets/wall.png");
     t_goal = TextureHandler::loadTexture("assets/goal.png");
-    _snake = new Snake(_width/2, _height/2, 2, 1, 50);
+    _snake = new Snake(_width/2, _height/2, 2, 1, 30);
 
 }
 
@@ -44,8 +45,8 @@ void World::update(){
         }
     }                       // add snake to the map for collision checking
 
-    for(int i = 0; i < (int)_entities.size(); i++){             // populate the world with entities
-        _world[_entities[i]->pos().y()][_entities[i]->pos().x()] = _entities[i]->type();
+    for(std::map<Point, WorldEntity*>::iterator i=_entities.begin(); i !=_entities.end(); i++){             // populate the world with entities
+        _world[i->second->pos().y()][i->second->pos().x()] = i->second->type();
     }
 
     if (_snake->update(_width, _height)){                                // move snake taking in width and height for edge checking and warping
@@ -55,14 +56,6 @@ void World::update(){
                   _world[_snake->head().y()][_snake->head().x()] == 3){   // if it ate snake or wall
                 reset();
             }
-            else if (_world[_snake->head().y()][_snake->head().x()] == 2){   // if it are food
-                removeEntity(_snake->head().x(), _snake->head().y());
-                _foodCount--;
-                _snake->accelerate();
-                if (_snake->snake().size() == 10){
-                    addEntity(4);
-                }
-            }
             else if (_world[_snake->head().y()][_snake->head().x()] == 4){
                 std::cout << "level completed: " << _level << std::endl;
                 _level++;
@@ -71,9 +64,19 @@ void World::update(){
                 std::cout << "loaded level: " << _level << std::endl;
                 reset();
             }
+            else {
+                _entities[Point(_snake->head().x(), _snake->head().y())]->execute(_snake);
+                std::cout << "removing entity: " << _entities[Point(_snake->head().x(), _snake->head().y())]->pos().x() << "," << _entities[Point(_snake->head().x(), _snake->head().y())]->pos().y() << " at: " <<
+                        _snake->head().x() << "," << _snake->head().y() << std::endl;
+                removeEntity(_snake->head().x(), _snake->head().y());
+                if (_snake->length() == 10){
+                    addEntity(4);
+                }
+                _snake->remove();    // snake stays same length
+            }
         }
-        else {                   // snake didnt eat anything;
-            _snake->remove();    // snake stays same length
+        else {
+            _snake->remove();
         }
     }
 
@@ -88,18 +91,21 @@ void World::addEntity(int type){
         int x = rand()%_width;
         int y = rand()%_height;
         if (_world[y][x] == 0){
-            _entities.push_back(new WorldEntity(Point(x, y), type));
+            _entities[Point(x,y)] = EntityFactory::createEntity(Point(x,y), type, nullptr);
             placed = true;
         }
     }
 }
 
 void World::removeEntity(int x, int y){
-    for (int i = 0; i < (int)_entities.size(); i++){
-        if (_entities[i]->pos() == Point(x,y)){
-            _entities.erase(_entities.begin()+i);
-        }
+    switch (_entities[Point(x, y)]->type()){
+        case 2: _foodCount--;
+            _snake->accelerate();
+            break;
+        default:
+            break;
     }
+    _entities.erase(Point(x,y));
 }
 
 void World::reset(){

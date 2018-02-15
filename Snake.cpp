@@ -14,20 +14,22 @@ Snake::~Snake(){
 
 void Snake::reset(){
     _stat_acceleration = init_acceleration;
-    _stat_maxSpeed = init_maxSpeed;
     _stat_deceleration = init_deceleration;
+    _stat_maxSpeed = init_maxSpeed;
     _snake.clear();
     add(init_position);
     _speed = 10;
+    c_speed = c_acceleration = c_deceleration = 0;
 }
 
 bool Snake::update(int worldW, int worldH){
-    if (_counter < _speed){
-        _counter++;
+
+    if (c_speed < _speed){
+        c_speed++;
         return false;
     }
     else {
-        _counter = 0;
+        c_speed = 0;
         switch (InputHandler::key()){
         case 'w':
             add(head()+((head().y() != 0)?Point(0, -1):Point(0, worldH-1)));
@@ -47,20 +49,18 @@ bool Snake::update(int worldW, int worldH){
 }
 
 void Snake::accelerate(){
-    static int count = 0;
-    count++;
-    if (count >= _stat_acceleration && _speed > _stat_maxSpeed){
+    c_acceleration++;
+    if (c_acceleration >= _stat_acceleration && _speed > _stat_maxSpeed){
         _speed--;
-        count = 0;
+        c_acceleration = 0;
     }
 }
 
 void Snake::decelerate(){
-    static int count = 0;
-    count++;
-    if (count >= _stat_deceleration && _speed < 20){
+    c_deceleration++;
+    if (c_deceleration >= _stat_deceleration && _speed < 20){
         _speed++;
-        count = 0;
+        c_deceleration = 0;
     }
 }
 
@@ -69,5 +69,11 @@ void Snake::add(Point p){
 }
 
 void Snake::remove(){
-    _snake.pop_back();
+    //std::cout << _addLength << std::endl;
+    if (_addLength > 0){
+        _addLength--;
+    }
+    else {
+        _snake.pop_back();
+    }
 }

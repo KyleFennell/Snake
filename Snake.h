@@ -18,20 +18,24 @@ public:
 
     std::vector<Point> snake(){ return _snake; }
     Point head(){ return _snake[0]; }
-    int& speed(){ return _speed; }
+    void addLength(int i){ _addLength += i; }
+    void addSpeed(int i){ _speed += i; }
+    int length(){ return _snake.size(); }
+    int speed(){ return _speed; }
     void accelerate();
     void decelerate();
 
 private:
 
     int _speed = 10;
-    int _counter = 0;
+    int _addLength = 0;
     int _stat_maxSpeed;
     int _stat_acceleration;
     int _stat_deceleration;
     int init_maxSpeed;
     int init_acceleration;
     int init_deceleration;
+    int c_speed, c_acceleration, c_deceleration;
     Point init_position;
     std::vector<Point> _snake;
 };

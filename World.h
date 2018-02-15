@@ -1,9 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include "SDL.h"
-#include "Snake.h"
-#include "WorldEntity.h"#include "MapManager.h"
+#include "WorldEntity.h"#include "Snake.h"
+#include "MapManager.h"
 
 class Snake;
 
@@ -33,7 +34,7 @@ private:
     std::vector<std::vector<int>> _world;
 
     Snake* _snake;
-    std::vector<WorldEntity*> _entities;
+    std::map<Point, WorldEntity*> _entities;
     MapManager* _maps;
 
     SDL_Texture* t_snake;
