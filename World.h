@@ -42,6 +42,7 @@ private:
     SDL_Texture* t_food;
     SDL_Texture* t_goal;
     SDL_Texture* t_wall;
+    SDL_Texture* t_speedUp;
 
     int _foodCount = 0;
     int _foodMax = 10;

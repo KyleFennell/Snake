@@ -11,12 +11,13 @@ public:
     }
 
     void execute(Snake* s) override {
-        s->addSpeed((_multiply)?(s->speed()/_speed):(s->speed()-_speed));
+        s->addSpeed((_multiply)?-(s->speed()/_speed):-(_speed));
     }
 
     void execute() override {
-        _snake->addSpeed((_multiply)?(_snake->speed()/_speed):(_snake->speed()-_speed));
+        _snake->addSpeed((_multiply)?-(_snake->speed()/_speed):-(_speed));
     }
+
 private:
     Snake* _snake;
     int _speed;

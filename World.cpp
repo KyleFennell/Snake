@@ -15,11 +15,12 @@ World::World(int w, int h){
         }
     }
 
-    t_ground = TextureHandler::loadTexture("assets/ground.png");
-    t_snake = TextureHandler::loadTexture("assets/snake.png");
-    t_food = TextureHandler::loadTexture("assets/food.png");
-    t_wall = TextureHandler::loadTexture("assets/wall.png");
-    t_goal = TextureHandler::loadTexture("assets/goal.png");
+    t_ground = TextureManager::loadTexture("assets/ground.png");
+    t_snake = TextureManager::loadTexture("assets/snake.png");
+    t_food = TextureManager::loadTexture("assets/food.png");
+    t_wall = TextureManager::loadTexture("assets/wall.png");
+    t_goal = TextureManager::loadTexture("assets/goal.png");
+    t_speedUp = TextureManager::loadTexture("assets/speedUp.png");
     _snake = new Snake(_width/2, _height/2, 2, 1, 30);
 
 }
@@ -56,7 +57,7 @@ void World::update(){
                   _world[_snake->head().y()][_snake->head().x()] == 3){   // if it ate snake or wall
                 reset();
             }
-            else if (_world[_snake->head().y()][_snake->head().x()] == 4){
+            else if (_world[_snake->head().y()][_snake->head().x()] == 4){  // snake ate the goal
                 std::cout << "level completed: " << _level << std::endl;
                 _level++;
                 std::cout << "next level: " << _level << std::endl;
@@ -64,13 +65,16 @@ void World::update(){
                 std::cout << "loaded level: " << _level << std::endl;
                 reset();
             }
-            else {
+            else {                                                       // snake has eaten an entity and its exetuce() is being run
                 _entities[Point(_snake->head().x(), _snake->head().y())]->execute(_snake);
                 std::cout << "removing entity: " << _entities[Point(_snake->head().x(), _snake->head().y())]->pos().x() << "," << _entities[Point(_snake->head().x(), _snake->head().y())]->pos().y() << " at: " <<
                         _snake->head().x() << "," << _snake->head().y() << std::endl;
                 removeEntity(_snake->head().x(), _snake->head().y());
                 if (_snake->length() == 10){
                     addEntity(4);
+                }
+                if (_snake->length()%5 == 0){
+                    addEntity(5);
                 }
                 _snake->remove();    // snake stays same length
             }
@@ -136,22 +140,25 @@ void World::draw(){
             dest.y = i*16;
             switch (_world[i][j]){
             case 0:
-                TextureHandler::draw(t_ground, src, dest);
+                TextureManager::draw(t_ground, src, dest);
                 break;
             case 1:
-                TextureHandler::draw(t_snake, src, dest);
+                TextureManager::draw(t_snake, src, dest);
                 break;
             case 2:
-                TextureHandler::draw(t_food, src, dest);
+                TextureManager::draw(t_food, src, dest);
                 break;
             case 3:
-                TextureHandler::draw(t_wall, src, dest);
+                TextureManager::draw(t_wall, src, dest);
                 break;
             case 4:
-                TextureHandler::draw(t_goal, src, dest);
+                TextureManager::draw(t_goal, src, dest);
+                break;
+            case 5:
+                TextureManager::draw(t_speedUp, src, dest);
                 break;
             default:
-                TextureHandler::draw(t_ground, src, dest);
+                TextureManager::draw(t_ground, src, dest);
                 break;
             }
         }
