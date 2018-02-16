@@ -36,6 +36,9 @@ private:
     int init_acceleration;
     int init_deceleration;
     int c_speed, c_acceleration, c_deceleration;
+
+
+
     Point init_position;
     std::vector<Point> _snake;
 };

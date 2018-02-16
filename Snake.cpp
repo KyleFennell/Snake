@@ -69,7 +69,6 @@ void Snake::add(Point p){
 }
 
 void Snake::remove(){
-    //std::cout << _addLength << std::endl;
     if (_addLength > 0){
         _addLength--;
     }

@@ -1,8 +1,10 @@
 #include "World.h"
 #include "TextureManager.h"
 #include "EntityFactory.h"
+#include <ctime>
 
 World::World(int w, int h){
+    std::srand(std::time(0));
     _width = w;
     _height = h;
     _maps = new MapManager();
@@ -17,12 +19,10 @@ World::World(int w, int h){
 
     t_ground = TextureManager::loadTexture("assets/ground.png");
     t_snake = TextureManager::loadTexture("assets/snake.png");
-    t_food = TextureManager::loadTexture("assets/food.png");
-    t_wall = TextureManager::loadTexture("assets/wall.png");
-    t_goal = TextureManager::loadTexture("assets/goal.png");
-    t_speedUp = TextureManager::loadTexture("assets/speedUp.png");
+    t_wall = TextureManager::loadTexture("assets/wall.png");
     _snake = new Snake(_width/2, _height/2, 2, 1, 30);
-
+    reset();
+//    std::cout << "world started" << std::endl;
 }
 
 World::~World(){
@@ -34,45 +34,45 @@ World::~World(){
 
 void World::update(){
 
-    _world = _map;                                              //clear the world back to default state
-
+    _world = _map;                                             // clear the world back to default state
+    //std::cout << "map drawn" << std::endl;
     while (_foodCount < _foodMax){                             // add food
-        addEntity(2);
+        addEntity(4);
         _foodCount++;
     }
+//    std::cout << "food drawn" << std::endl;
     for (Point p : _snake->snake()){
         if (p != _snake->head()){
             _world[p.y()][p.x()] = -1;
         }
     }                       // add snake to the map for collision checking
-
+//    std::cout << "snake drawn" << std::endl;
     for(std::map<Point, WorldEntity*>::iterator i=_entities.begin(); i !=_entities.end(); i++){             // populate the world with entities
-        _world[i->second->pos().y()][i->second->pos().x()] = i->second->type();
+//        std::cout << i->second->pos().y() << "," << i->second->pos().x() << std::endl;
+        _world[i->second->pos().y()][i->second->pos().x()] = 4;
     }
-
-    if (_snake->update(_width, _height)){                                // move snake taking in width and height for edge checking and warping
+//    std::cout << "entities drawn" << std::endl;
+    if (_goal){
+        _world[_goal->pos().y()][_goal->pos().x()] = 3;
+    }
+//    std::cout << "goal drawn" << std::endl;
+    if (_snake->update(_width, _height)){                                   // move snake taking in width and height for edge checking and warping
         _snake->decelerate();
-        if (_world[_snake->head().y()][_snake->head().x()] != 0){        // if snake ate something
+        if (_world[_snake->head().y()][_snake->head().x()] != 0){           // if snake ate something
             if (_world[_snake->head().y()][_snake->head().x()] == -1 ||
-                  _world[_snake->head().y()][_snake->head().x()] == 3){   // if it ate snake or wall
+                  _world[_snake->head().y()][_snake->head().x()] == 2){     // if it ate snake or wall
                 reset();
             }
-            else if (_world[_snake->head().y()][_snake->head().x()] == 4){  // snake ate the goal
-                std::cout << "level completed: " << _level << std::endl;
-                _level++;
-                std::cout << "next level: " << _level << std::endl;
+            else if (_world[_snake->head().y()][_snake->head().x()] == 3){  // snake ate the goal
+                _level = (_level+1+_maps->mapCount())%_maps->mapCount();
+                std::cout << "level completed" << _level << std::endl;
                 loadMap();
-                std::cout << "loaded level: " << _level << std::endl;
+                std::cout << "loading level " << _level << std::endl;
                 reset();
             }
-            else {                                                       // snake has eaten an entity and its exetuce() is being run
+            else {                                                          // snake has eaten an entity and its exetuce() is being run
                 _entities[Point(_snake->head().x(), _snake->head().y())]->execute(_snake);
-                std::cout << "removing entity: " << _entities[Point(_snake->head().x(), _snake->head().y())]->pos().x() << "," << _entities[Point(_snake->head().x(), _snake->head().y())]->pos().y() << " at: " <<
-                        _snake->head().x() << "," << _snake->head().y() << std::endl;
                 removeEntity(_snake->head().x(), _snake->head().y());
-                if (_snake->length() == 10){
-                    addEntity(4);
-                }
                 if (_snake->length()%5 == 0){
                     addEntity(5);
                 }
@@ -82,6 +82,10 @@ void World::update(){
         else {
             _snake->remove();
         }
+        if (_snake->length() == 10 && !_goal){
+            _goal = new WorldEntity(Point(_width/2, _height/2), 3, new Effect(), TextureManager::loadTexture("assets/goal.png"));
+        }
+//        std::cout << "collision checkes completed" << std::endl;
     }
 
     for (Point p : _snake->snake()){
@@ -103,7 +107,7 @@ void World::addEntity(int type){
 
 void World::removeEntity(int x, int y){
     switch (_entities[Point(x, y)]->type()){
-        case 2: _foodCount--;
+        case 4: _foodCount--;
             _snake->accelerate();
             break;
         default:
@@ -116,11 +120,14 @@ void World::reset(){
     _snake->reset();
     _entities.clear();
     _foodCount = 0;
+    _goal = nullptr;
+    _world = _map;
+    addEntity(6);
 }
 
 void World::loadMap(){
     std::vector<std::vector<int>> nextMap = _maps->getMap(_level).map();
-    std::cout << _map.size() << "," << _map[0].size() << " " << nextMap.size() << "," << nextMap[0].size() << std::endl;
+    std::cout << _level << std::endl;
     for (int i = 0; i < _height; i++){
         for (int j = 0; j < _width; j++){
             _map[i][j] = nextMap[i][j];
@@ -146,21 +153,22 @@ void World::draw(){
                 TextureManager::draw(t_snake, src, dest);
                 break;
             case 2:
-                TextureManager::draw(t_food, src, dest);
-                break;
-            case 3:
                 TextureManager::draw(t_wall, src, dest);
-                break;
-            case 4:
-                TextureManager::draw(t_goal, src, dest);
-                break;
-            case 5:
-                TextureManager::draw(t_speedUp, src, dest);
                 break;
             default:
                 TextureManager::draw(t_ground, src, dest);
                 break;
             }
         }
+    }
+    for(std::map<Point, WorldEntity*>::iterator i=_entities.begin(); i !=_entities.end(); i++){   // draw the entities
+        dest.x = i->second->pos().x()*16;
+        dest.y = i->second->pos().y()*16;
+        TextureManager::draw(i->second->texture(), src, dest);
+    }
+    if (_goal){
+        dest.x = _goal->pos().x()*16;
+        dest.y = _goal->pos().y()*16;
+        TextureManager::draw(_goal->texture(), src, dest);
     }
 }
