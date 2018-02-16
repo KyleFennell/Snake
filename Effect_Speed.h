@@ -12,6 +12,7 @@ public:
     }
 
     void execute(Snake* s) override {
+        _snake = s;
         s->addSpeed((_multiply)?-(s->speed()/_speed):-(_speed));
     }
 
@@ -20,10 +21,6 @@ public:
     }
 
     int duration(){ return _duration; }
-
-    void undo(Snake* s) override {
-        s->addSpeed((_multiply)?(s->speed()/_speed):(_speed));
-    }
 
     void undo() override {
         _snake->addSpeed((_multiply)?(_snake->speed()/_speed):(_speed));

@@ -22,9 +22,7 @@ public:
     Point head(){ return _snake[0]; }
     void addLength(int i){ _addLength += i; }
     void addSpeed(int i){ _speed += i; }
-    void givePowerup(Effect* effect){
-        _powerup = effect;
-        f_powerup_active = false; }
+    void givePowerup(Effect* effect);
     void usePowerup();
     int length(){ return _snake.size(); }
     int speed(){ return _speed; }
@@ -44,8 +42,10 @@ private:
     int c_speed, c_acceleration, c_deceleration;
     int c_powerup_duration;
     bool f_powerup_active = false;
+    bool f_powerup_second = false;
 
     Effect* _powerup;
+    Effect* _powerup_second;
 
     Point init_position;
     std::vector<Point> _snake;

@@ -11,14 +11,13 @@ public:
     }
 
     void execute(Snake* s) override {
+        _snake = s;
         s->addLength((_multiply)?((s->length()-1)*(_length-1)):_length);
     }
 
     void execute() override {
         _snake->addLength((_multiply)?((_snake-1)->length()*_length):_length);
     }
-
-    void undo(Snake* s) override {}
 
     void undo() override {}
 

@@ -25,11 +25,10 @@ void Snake::reset(){
 
 bool Snake::update(int worldW, int worldH){
     if (c_powerup_duration > 0){
-        std::cout << c_powerup_duration << std::endl;
         c_powerup_duration--;
     }
     else if (c_powerup_duration == 0){
-        _powerup->undo(this);
+        _powerup->undo();
         c_powerup_duration--; //pushes it below the threshold.
         f_powerup_active = false;
         _powerup = new Effect();
@@ -56,7 +55,7 @@ bool Snake::update(int worldW, int worldH){
         }
         switch (InputHandler::p1PowerupKey()){
         case 'e':
-            if (!f_powerup_active){
+            if (!f_powerup_active || f_powerup_second){
                 usePowerup();
             }
         }
@@ -80,10 +79,25 @@ void Snake::decelerate(){
     }
 }
 
+void Snake::givePowerup(Effect* effect){
+    if (f_powerup_active){
+        f_powerup_second = true;
+        _powerup_second = effect;
+    }
+    else{
+        _powerup = effect;
+    }
+}
+
 void Snake::usePowerup(){
+    f_powerup_active = true;
+    if (f_powerup_second){
+        _powerup->undo();
+        f_powerup_second = false;
+        _powerup = _powerup_second;
+    }
     _powerup->execute(this);
     c_powerup_duration = _powerup->duration();
-    f_powerup_active = true;
 }
 
 void Snake::add(Point p){
