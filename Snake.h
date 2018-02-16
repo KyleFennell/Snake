@@ -2,7 +2,9 @@
 
 #include <vector>
 #include "Point.h"
-#include "InputHandler.h"
+#include "InputHandler.h"
+#include "Effect.h"
+class Effect;
 
 class Snake{
 public:
@@ -20,6 +22,10 @@ public:
     Point head(){ return _snake[0]; }
     void addLength(int i){ _addLength += i; }
     void addSpeed(int i){ _speed += i; }
+    void givePowerup(Effect* effect){
+        _powerup = effect;
+        f_powerup_active = false; }
+    void usePowerup();
     int length(){ return _snake.size(); }
     int speed(){ return _speed; }
     void accelerate();
@@ -36,8 +42,10 @@ private:
     int init_acceleration;
     int init_deceleration;
     int c_speed, c_acceleration, c_deceleration;
+    int c_powerup_duration;
+    bool f_powerup_active = false;
 
-
+    Effect* _powerup;
 
     Point init_position;
     std::vector<Point> _snake;

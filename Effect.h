@@ -11,4 +11,8 @@ public:
     ~Effect(){}
     virtual void execute(Snake* s){}
     virtual void execute(){}
+    virtual int duration(){ return 0; }
+    virtual void undo(Snake* s){}
+    virtual void undo(){}
+    virtual bool autoExecute(){ return false;}
 };

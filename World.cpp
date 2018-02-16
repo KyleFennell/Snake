@@ -71,7 +71,12 @@ void World::update(){
                 reset();
             }
             else {                                                          // snake has eaten an entity and its exetuce() is being run
-                _entities[Point(_snake->head().x(), _snake->head().y())]->execute(_snake);
+                if (_entities[Point(_snake->head().x(), _snake->head().y())]->effect()->autoExecute()){
+                    _entities[Point(_snake->head().x(), _snake->head().y())]->execute(_snake);
+                }
+                else {
+                    _snake->givePowerup(_entities[Point(_snake->head().x(), _snake->head().y())]->effect());
+                }
                 removeEntity(_snake->head().x(), _snake->head().y());
                 if (_snake->length()%5 == 0){
                     addEntity(5);

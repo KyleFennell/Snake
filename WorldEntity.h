@@ -21,6 +21,7 @@ public:
     void execute(){ _effect->execute(); }
     void execute(Snake* s){ _effect->execute(s); }
     SDL_Texture* texture() { return _tex; }
+    Effect* effect(){ return _effect; }
 
 private:
 

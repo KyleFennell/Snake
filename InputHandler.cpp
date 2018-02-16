@@ -1,6 +1,7 @@
 #include "InputHandler.h"
 
-char InputHandler::_key = 's';
+char InputHandler::_p1MovementKey = 's';
+char InputHandler::_p1PowerupKey = ' ';
 
 void InputHandler::handleEvents(){
     switch(Game::event.key.keysym.sym){
@@ -10,16 +11,22 @@ void InputHandler::handleEvents(){
         SDL_PushEvent(&quit);
         break;
     case SDLK_w:
-        _key = 'w';
+        _p1MovementKey = 'w';
         break;
     case SDLK_a:
-        _key = 'a';
+        _p1MovementKey = 'a';
         break;
     case SDLK_s:
-        _key = 's';
+        _p1MovementKey = 's';
         break;
     case SDLK_d:
-        _key = 'd';
+        _p1MovementKey = 'd';
+        break;
+    case SDLK_e:
+        _p1PowerupKey = 'e';
+        SDL_Event key;
+        key.key.keysym.sym = SDLK_0;
+        SDL_PushEvent(&key);
         break;
     default:
         break;

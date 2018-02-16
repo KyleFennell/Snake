@@ -17,6 +17,13 @@ public:
     void execute() override {
         _snake->addLength((_multiply)?((_snake-1)->length()*_length):_length);
     }
+
+    void undo(Snake* s) override {}
+
+    void undo() override {}
+
+    bool autoExecute() { return true; }
+
 private:
     Snake* _snake;
     int _length;

@@ -14,7 +14,7 @@ public:
         case 4:    // apple
             return new WorldEntity(p, type, new Effect_Lenth(s, 1, false), TextureManager::loadTexture("assets/food.png"));
         case 5:    // speed
-            return new WorldEntity(p, type, new Effect_Speed(s, 2, true), TextureManager::loadTexture("assets/speedUp.png"));
+            return new WorldEntity(p, type, new Effect_Speed(s, 2, true, 600), TextureManager::loadTexture("assets/speedUp.png"));
         case 6:
             return new WorldEntity(p, type, new Effect_Lenth(s, 2, true), TextureManager::loadTexture("assets/foodPile.png"));
         }
