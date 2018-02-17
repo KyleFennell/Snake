@@ -22,7 +22,7 @@ public:
 
 private:
 
-    void addEntity(int type);
+    void addEntity(Point p, int type);
     void removeEntity(int x, int y);
 
     void loadMap();
@@ -31,11 +31,13 @@ private:
     int _width;
     int _height;
     int _level = 0;
-    std::vector<std::vector<int>> _map;
+    std::vector<std::vector<int>> _mapData;
     std::vector<std::vector<int>> _world;
+    Map* _map;
 
     Snake* _snake;
     std::map<Point, WorldEntity*> _entities;
+    std::vector<PowerupSpawn*> _powerupSpawns;
     MapManager* _maps;
 
     SDL_Texture* t_snake;

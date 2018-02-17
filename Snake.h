@@ -13,6 +13,7 @@ public:
     ~Snake();
 
     bool update(int worldW, int worldH);            // returns true if the snake moved
+    void setSpawn(Point p){ init_position = p; }
     void reset();
 
     void add(Point p);
@@ -44,8 +45,8 @@ private:
     bool f_powerup_active = false;
     bool f_powerup_second = false;
 
-    Powerup* _powerup;
-    Powerup* _powerup_second;
+    Powerup* _powerup = nullptr;
+    Powerup* _powerup_second = nullptr;
 
     Point init_position;
     std::vector<Point> _snake;

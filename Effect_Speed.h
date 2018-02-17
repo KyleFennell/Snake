@@ -4,39 +4,30 @@
 
 class Effect_Speed : public Effect{
 public:
-    Effect_Speed(Snake* s, int speed, bool multiply, int duration, bool autoExecute){
+    Effect_Speed(Snake* s, int speed, bool multiply, int duration){
         _snake = s;
         _speed = speed;
         _multiply = multiply;
         _duration = duration;
-        _autoExecute = autoExecute;
     }
 
-    void execute(Snake* s) override {
-        _snake = s;
-        s->addSpeed((_multiply)?-(s->speed()/_speed):-(_speed));
-    }
-
-    void execute() override {
-        _snake->addSpeed((_multiply)?-(_snake->speed()/_speed):-(_speed));
-    }
 
     int duration(){ return _duration; }
 
     void undo() override {
+        std::cout << "undoing speed" << std::endl;
         _snake->addSpeed((_multiply)?(_snake->speed()/_speed):(_speed));
     }
 
-    bool autoExecute(Snake* s) {
-        if (_autoExecute){
-            if (_snake){
-                execute();
-            }
-            else {
-                execute(s);
-            }
-        }
-        return _autoExecute;
+    void execute(Snake* s) override {
+        if (!_snake)
+            _snake = s;
+        execute();
+    }
+
+    void execute() override {
+        std::cout << "executing speed" << std::endl;
+        _snake->addSpeed((_multiply)?-(_snake->speed()/_speed):-(_speed));
     }
 
 private:
@@ -44,5 +35,4 @@ private:
     int _speed;
     bool _multiply;
     int _duration;
-    bool _autoExecute;
 };

@@ -43,10 +43,10 @@ default
 players
 25 20
 powerups
-5 5 1
-45 40 5
-45 5 6
-5 50 5
+5 5 6
+45 35 6
+45 5 5
+5 35 5
 end
 
 begin
@@ -94,10 +94,10 @@ box
 players
 25 20
 powerups
-6 6 1
-45 40 5
-45 6 6
-6 50 5
+6 6 5
+43 33 5
+43 6 6
+6 33 6
 end
 
 begin
@@ -146,7 +146,7 @@ players
 25 20
 powerups
 2 2 5
-47 57 5
+47 37 5
 47 2 5
-2 47 5
+2 37 5
 end

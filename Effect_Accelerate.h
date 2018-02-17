@@ -4,17 +4,19 @@
 
 class Effect_Accelerate : public Effect{
 public:
-    Effect_Accelerate(Snake* s, bool autoExecute){
+    Effect_Accelerate(Snake* s){
         _snake = s;
-        _autoExecute = autoExecute;
     }
 
     void execute(Snake* s) override {
-        _snake = s;
-        s->accelerate();
+        if (!_snake)
+            _snake = s;
+        execute();
     }
 
+
     void execute() override {
+        std::cout << "executing acceleration" << std::endl;
         _snake->accelerate();
     }
 
@@ -22,6 +24,4 @@ public:
 
 private:
     Snake* _snake;
-    bool _autoExecute;
 };
-

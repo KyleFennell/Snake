@@ -3,7 +3,7 @@
 class Point{
 public:
 
-    Point(){ _x = 0; _y = 0; }
+    Point(){ _x = -1; _y = -1; }
     Point(int x, int y){ _x = x; _y = y; }
     ~Point(){ _x = 0; _y = 0; };
 

@@ -9,13 +9,14 @@ World::World(int w, int h){
     _height = h;
     _maps = new MapManager();
     _maps->loadMaps();
-    _map = std::vector<std::vector<int>>(_height);        // this section will be replaces with map loading
+    _mapData = std::vector<std::vector<int>>(_height);        // this section will be replaces with map loading
     for (int i = 0; i < _height; i++){
-        _map[i] = std::vector<int>(_width);
+        _mapData[i] = std::vector<int>(_width);
         for (int j = 0; j < _width; j++){
-            _map[i][j] = 0;
+            _mapData[i][j] = 0;
         }
     }
+    loadMap();
 
     t_ground = TextureManager::loadTexture("assets/ground.png");
     t_snake = TextureManager::loadTexture("assets/snake.png");
@@ -33,12 +34,19 @@ World::~World(){
 }
 
 void World::update(){
-
-    _world = _map;                                             // clear the world back to default state
+    _world = _mapData;                                             // clear the world back to default state
 //    std::cout << "map drawn" << std::endl;
     while (_foodCount < _foodMax){                             // add food
-        addEntity(4);
+        addEntity(Point(), 4);
         _foodCount++;
+    }
+    for (PowerupSpawn* p : _map->powerupSpawns()){
+        if (p->update()){
+            p->resetRespawnTime();
+            if (!_entities[p->pos()]){
+                addEntity(p->pos(), p->type());
+            }
+        }
     }
 //    std::cout << "food drawn" << std::endl;
     for (Point p : _snake->snake()){
@@ -48,31 +56,34 @@ void World::update(){
     }                       // add snake to the map for collision checking
 //    std::cout << "snake drawn" << std::endl;
     for(std::map<Point, WorldEntity*>::iterator i=_entities.begin(); i !=_entities.end(); i++){             // populate the world with entities
-//        std::cout << i->second->pos().y() << "," << i->second->pos().x() << std::endl;
+//        std::cout << i->second->pos().x() << "," << i->second->pos().y() << " " << i->second->type() << std::endl;
         _world[i->second->pos().y()][i->second->pos().x()] = 4;
     }
 //    std::cout << "entities drawn" << std::endl;
     if (_goal){
         _world[_goal->pos().y()][_goal->pos().x()] = 3;
+//        std::cout << "goal drawn" << std::endl;
     }
-//    std::cout << "goal drawn" << std::endl;
     if (_snake->update(_width, _height)){                                   // move snake taking in width and height for edge checking and warping
         _snake->decelerate();
         if (_world[_snake->head().y()][_snake->head().x()] != 0){           // if snake ate something
             if (_world[_snake->head().y()][_snake->head().x()] == -1 ||
                   _world[_snake->head().y()][_snake->head().x()] == 2){     // if it ate snake or wall
+                std::cout << "snake hit wall or itself" << std::endl;
                 reset();
             }
             else if (_world[_snake->head().y()][_snake->head().x()] == 3){  // snake ate the goal
+                std::cout << "level completed" << _level << std::endl;
                 _level = (_level+1+_maps->mapCount())%_maps->mapCount();
-//                std::cout << "level completed" << _level << std::endl;
                 loadMap();
 //                std::cout << "loading level " << _level << std::endl;
                 reset();
             }
             else {                                                          // snake has eaten an entity and its exetuce() is being run
                 if (!_entities[Point(_snake->head().x(), _snake->head().y())]->autoExecute(_snake)){
+                    std::cout << "snake eating a powerup" << std::endl;
                     _snake->givePowerup(_entities[Point(_snake->head().x(), _snake->head().y())]->powerup());
+                    std::cout << "snake ate: " << _entities[Point(_snake->head().x(), _snake->head().y())]->type() << std::endl;
                 }
                 removeEntity(_snake->head().x(), _snake->head().y());
                 _snake->remove();    // snake stays same length
@@ -92,17 +103,23 @@ void World::update(){
     }                       // add snake to the map
 }
 
-void World::addEntity(int type){
+void World::addEntity(Point p, int type){
     bool placed = false;
-    while (!placed){
-        int x = rand()%_width;
-        int y = rand()%_height;
-        if (_world[y][x] == 0){
-            std::cout << "creating entity" << std::endl;
-            _entities[Point(x,y)] = EntityFactory::createEntity(Point(x,y), type, nullptr);
-            placed = true;
-            std::cout << "placed entity" << std::endl;
+    if (p == Point()){
+        while (!placed){
+            int x = rand()%_width;
+            int y = rand()%_height;
+            if (_world[y][x] == 0 && !_entities[Point(x,y)]){
+                std::cout << "creating entity" << std::endl;
+                _entities[Point(x,y)] = EntityFactory::createEntity(Point(x,y), type, nullptr);
+                placed = true;
+                std::cout << "placed entity" << std::endl;
+            }
         }
+    }
+    else {
+        std::cout << "creating entity from spawner " << type << std::endl;
+        _entities[p] = EntityFactory::createEntity(p, type, nullptr);
     }
 }
 
@@ -121,16 +138,19 @@ void World::reset(){
     _entities.clear();
     _foodCount = 0;
     _goal = nullptr;
-    _world = _map;
-    addEntity(6);
+    _world = _mapData;
+    for (int i = 0; i < (int)_map->powerupSpawns().size(); i++){
+        addEntity(_map->powerupSpawns()[i]->pos(), _map->powerupSpawns()[i]->type());
+    }
 }
 
 void World::loadMap(){
-    std::vector<std::vector<int>> nextMap = _maps->getMap(_level).map();
+    _map = _maps->getMap(_level);
+    std::vector<std::vector<int>> nextMap = _map->map();
     std::cout << _level << std::endl;
     for (int i = 0; i < _height; i++){
         for (int j = 0; j < _width; j++){
-            _map[i][j] = nextMap[i][j];
+            _mapData[i][j] = nextMap[i][j];
         }
     }
 }

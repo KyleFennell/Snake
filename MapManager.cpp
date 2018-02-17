@@ -34,10 +34,10 @@ void MapManager::loadMaps(){
                 }
 //                std::cout << "players loaded" << std::endl;
                 getline(file, line);
-                std::vector<PowerupSpawn> powerup;
+                std::vector<PowerupSpawn*> powerup;
                 while (line.compare("end") != 0){
                     std::vector<std::string> splitLine = split(line, ' ');
-                    powerup.push_back(PowerupSpawn(Point(stoi(splitLine[0]), stoi(splitLine[1])), stoi(splitLine[2])));
+                    powerup.push_back(new PowerupSpawn(Point(stoi(splitLine[0]), stoi(splitLine[1])), stoi(splitLine[2])));
                     getline(file, line);
                 }
 //                std::cout << "powerup loaded" << std::endl;

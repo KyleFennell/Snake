@@ -32,7 +32,7 @@ bool Snake::update(int worldW, int worldH){
         _powerup->undo();
         c_powerup_duration--; //pushes it below the threshold.
         f_powerup_active = false;
-        _powerup = new Powerup();
+        _powerup = _powerup_second;
     }
     if (c_speed < _speed){
         c_speed++;
@@ -91,15 +91,17 @@ void Snake::givePowerup(Powerup* powerup){
 }
 
 void Snake::usePowerup(){
-    f_powerup_active = true;
-    if (f_powerup_second){
-        _powerup->undo();
-        f_powerup_second = false;
-        _powerup = _powerup_second;
-        _powerup_second = new Powerup();
+    if (_powerup){
+        f_powerup_active = true;
+        if (f_powerup_second){
+            _powerup->undo();
+            f_powerup_second = false;
+            _powerup = _powerup_second;
+            _powerup_second = nullptr;
+        }
+        _powerup->execute(this);
+        c_powerup_duration = _powerup->duration();
     }
-    _powerup->execute(this);
-    c_powerup_duration = _powerup->duration();
 }
 
 void Snake::add(Point p){

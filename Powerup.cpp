@@ -7,6 +7,7 @@ Powerup::Powerup(std::vector<Effect*>effects, bool autoExecute){
 
 bool Powerup::autoExecute(Snake* s){
     if (_autoExecute){
+        std::cout << "autoexecuting powerup" << std::endl;
         execute(s);
     }
     return _autoExecute;
@@ -26,6 +27,7 @@ void Powerup::execute(Snake* s){
 }
 
 void Powerup::undo(){
+
     for (Effect* e : _effects){
         e->undo();
     }
