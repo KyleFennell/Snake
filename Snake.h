@@ -3,9 +3,9 @@
 #include <vector>
 #include "Point.h"
 #include "InputHandler.h"
-#include "Effect.h"
-class Effect;
+#include "Powerup.h"
 
+class Powerup;
 class Snake{
 public:
 
@@ -22,7 +22,7 @@ public:
     Point head(){ return _snake[0]; }
     void addLength(int i){ _addLength += i; }
     void addSpeed(int i){ _speed += i; }
-    void givePowerup(Effect* effect);
+    void givePowerup(Powerup* powerup);
     void usePowerup();
     int length(){ return _snake.size(); }
     int speed(){ return _speed; }
@@ -44,8 +44,8 @@ private:
     bool f_powerup_active = false;
     bool f_powerup_second = false;
 
-    Effect* _powerup;
-    Effect* _powerup_second;
+    Powerup* _powerup;
+    Powerup* _powerup_second;
 
     Point init_position;
     std::vector<Point> _snake;

@@ -19,8 +19,9 @@ void Snake::reset(){
     _snake.clear();
     add(init_position);
     _speed = 10;
-    _powerup = new Effect();
+    _powerup = new Powerup();
     c_speed = c_acceleration = c_deceleration = c_powerup_duration = 0;
+    _addLength = 0;
 }
 
 bool Snake::update(int worldW, int worldH){
@@ -31,7 +32,7 @@ bool Snake::update(int worldW, int worldH){
         _powerup->undo();
         c_powerup_duration--; //pushes it below the threshold.
         f_powerup_active = false;
-        _powerup = new Effect();
+        _powerup = new Powerup();
     }
     if (c_speed < _speed){
         c_speed++;
@@ -79,13 +80,13 @@ void Snake::decelerate(){
     }
 }
 
-void Snake::givePowerup(Effect* effect){
+void Snake::givePowerup(Powerup* powerup){
     if (f_powerup_active){
         f_powerup_second = true;
-        _powerup_second = effect;
+        _powerup_second = powerup;
     }
     else{
-        _powerup = effect;
+        _powerup = powerup;
     }
 }
 
@@ -95,6 +96,7 @@ void Snake::usePowerup(){
         _powerup->undo();
         f_powerup_second = false;
         _powerup = _powerup_second;
+        _powerup_second = new Powerup();
     }
     _powerup->execute(this);
     c_powerup_duration = _powerup->duration();

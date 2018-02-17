@@ -4,11 +4,12 @@
 
 class Effect_Speed : public Effect{
 public:
-    Effect_Speed(Snake* s, int speed, bool multiply, int duration){
+    Effect_Speed(Snake* s, int speed, bool multiply, int duration, bool autoExecute){
         _snake = s;
         _speed = speed;
         _multiply = multiply;
         _duration = duration;
+        _autoExecute = autoExecute;
     }
 
     void execute(Snake* s) override {
@@ -26,11 +27,22 @@ public:
         _snake->addSpeed((_multiply)?(_snake->speed()/_speed):(_speed));
     }
 
-    bool autoExecute() { return false; }
+    bool autoExecute(Snake* s) {
+        if (_autoExecute){
+            if (_snake){
+                execute();
+            }
+            else {
+                execute(s);
+            }
+        }
+        return _autoExecute;
+    }
 
 private:
     Snake* _snake;
     int _speed;
     bool _multiply;
     int _duration;
+    bool _autoExecute;
 };

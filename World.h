@@ -7,6 +7,7 @@
 #include "MapManager.h"
 
 class Snake;
+class WorldEntity;
 
 class World{
 public:
