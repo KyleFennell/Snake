@@ -13,13 +13,13 @@ World::World(int w, int h){
 
     _maps->loadMaps();
     _mapData = std::vector<std::vector<int>>(_height, std::vector<int>(_width));
+    _snake = new Snake(_width/2, _height/2, 2, 1, 30);
 
     loadMap();
 
     t_ground = TextureManager::loadTexture("assets/ground.png");
     t_snake = TextureManager::loadTexture("assets/snake.png");
     t_wall = TextureManager::loadTexture("assets/wall.png");
-    _snake = new Snake(_width/2, _height/2, 2, 1, 30);
     resetWorld();
 
     std::cout << "world started" << std::endl;
@@ -166,6 +166,7 @@ void World::loadMap(){
             _mapData[i][j] = nextMap[i][j];
         }
     }
+    _snake->setSpawn(_map->playerSpawns()[0]);
 }
 
 void World::draw(){

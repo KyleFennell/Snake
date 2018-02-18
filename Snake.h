@@ -44,6 +44,7 @@ private:
     int init_maxSpeed;
     int init_acceleration;
     int init_deceleration;
+    Point init_position;
     int c_speed, c_acceleration, c_deceleration;
     int c_powerup_duration;
     bool f_powerup_active = false;
@@ -52,6 +53,5 @@ private:
     Powerup* _powerup = nullptr;
     Powerup* _powerup_second = nullptr;
 
-    Point init_position;
     std::vector<Point> _snake;
 };

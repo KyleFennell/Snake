@@ -36,7 +36,7 @@ private:
 
     int _width;
     int _height;
-    int _level = 0;
+    int _level = 3;
     std::vector<std::vector<int>> _mapData;
     std::vector<std::vector<int>> _world;
     Map* _map;

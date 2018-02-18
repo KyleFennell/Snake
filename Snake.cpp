@@ -19,8 +19,9 @@ void Snake::reset(){
     _snake.clear();
     add(init_position);
     _speed = 10;
-    _powerup = new Powerup();
-    c_speed = c_acceleration = c_deceleration = c_powerup_duration = 0;
+    _powerup = _powerup_second = nullptr;
+    c_speed = c_acceleration = c_deceleration = 0;
+    c_powerup_duration = -1;
     _addLength = 0;
 }
 
@@ -94,6 +95,7 @@ void Snake::givePowerup(Powerup* powerup){
 
 void Snake::usePowerup(){
     if (_powerup){
+//        std::cout << "using powerup: " << _powerup << std::endl;
         f_powerup_active = true;
         if (f_powerup_second){
             _powerup->undo();
