@@ -22,7 +22,11 @@ public:
     std::vector<Point> snake(){ return _snake; }
     Point head(){ return _snake[0]; }
     void addLength(int i){ _addLength += i; }
-    void addSpeed(int i){ _speed += i; }
+    void addSpeed(int i){
+        _speed += i;
+        if (_speed < _stat_maxSpeed)
+            _speed = _stat_maxSpeed;
+    }
     void givePowerup(Powerup* powerup);
     void usePowerup();
     int length(){ return _snake.size(); }

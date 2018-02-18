@@ -16,7 +16,7 @@ public:
 
 
     void execute() override {
-        std::cout << "executing acceleration" << std::endl;
+//        std::cout << "executing acceleration" << std::endl;
         _snake->accelerate();
     }
 

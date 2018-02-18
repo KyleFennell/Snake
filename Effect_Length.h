@@ -18,7 +18,7 @@ public:
 
 
     void execute() override {
-        std::cout << "executing length" << std::endl;
+//        std::cout << "executing length" << std::endl;
         _snake->addLength((_multiply)?(_snake->length()-1*_length-1):_length);
     }
 

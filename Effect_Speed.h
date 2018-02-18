@@ -15,7 +15,7 @@ public:
     int duration(){ return _duration; }
 
     void undo() override {
-        std::cout << "undoing speed" << std::endl;
+//        std::cout << "undoing speed" << std::endl;
         _snake->addSpeed((_multiply)?(_snake->speed()/_speed):(_speed));
     }
 
@@ -26,7 +26,7 @@ public:
     }
 
     void execute() override {
-        std::cout << "executing speed" << std::endl;
+//        std::cout << "executing speed" << std::endl;
         _snake->addSpeed((_multiply)?-(_snake->speed()/_speed):-(_speed));
     }
 

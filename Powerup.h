@@ -20,6 +20,6 @@ public:
 private:
 
     std::vector<Effect*> _effects;
-    Snake* _snake;
+    Snake* _snake = nullptr;
     bool _autoExecute;
 };

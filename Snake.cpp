@@ -33,6 +33,8 @@ bool Snake::update(int worldW, int worldH){
         c_powerup_duration--; //pushes it below the threshold.
         f_powerup_active = false;
         _powerup = _powerup_second;
+        _powerup_second = nullptr;
+        f_powerup_second = false;
     }
     if (c_speed < _speed){
         c_speed++;

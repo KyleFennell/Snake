@@ -12,6 +12,8 @@ class WorldEntity;
 class World{
 public:
 
+    enum {Tile_SnakeCollider = -1, Tile_Ground = 0, Tile_Snake = 1, Tile_Wall = 2, Tile_Goal = 3, Tile_Entity = 4};
+
     World(int w, int h);
     ~World();
     std::vector<std::vector<int>>* world() { return &_world; }
@@ -25,8 +27,12 @@ private:
     void addEntity(Point p, int type);
     void removeEntity(int x, int y);
 
+    void placeSnakeCollider();
+    void spawnPowerups();
+
+
     void loadMap();
-    void reset();
+    void resetWorld();
 
     int _width;
     int _height;
